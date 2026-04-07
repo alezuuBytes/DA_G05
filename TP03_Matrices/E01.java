@@ -49,7 +49,7 @@ public class E01 {
                     input.nextLine();
                     break;
                 case 5:
-                    zonaCaliente(temperaturas);
+                    zonasCalientes(temperaturas);
                     input.nextLine();
                     break;
                 case 6:
@@ -164,8 +164,7 @@ public class E01 {
     public static void zonasX(double[][] matriz) {
         Scanner input = new Scanner(System.in);
         double tempX = 0;
-        int fila, columna;
-        boolean noMax = false;
+        boolean noMax = true;
 
         System.out.print("Ingrese la temperatura que desea:");
         tempX = input.nextDouble();
@@ -173,23 +172,20 @@ public class E01 {
 
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
-                if (tempX < matriz[i][j]){
-                    fila = i;
-                    columna = j;
-                    System.out.println((i + j + 1) + ". " + matriz[i][j] + " (" + fila + "," + columna + ")");
-                } else {
-                    noMax = true;
+                if (tempX < matriz[i][j]) {
+                    System.out.println((i + j + 1) + ". " + matriz[i][j] + " (" + i + "," + j + ")");
+                    noMax = false;
                 }
             }
         }
         if (noMax) {
-            System.out.println("no hay temperaturas que superen a " + tempX);
+            System.out.println("(Ninguno)");
         }
 
         input.close();
     }
 
-    public static void zonaCaliente(double[][] matriz) {
+    public static void zonasCalientes(double[][] matriz) {
         int[][] direcciones = {
             {0, 1},
             {0, -1},
