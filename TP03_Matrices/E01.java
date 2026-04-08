@@ -3,149 +3,170 @@ import java.util.Scanner;
 public class E01 {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in); 
-        int filas = 0, columnas = 0, caso = 0;
+        int filas, columnas;
+        char opción;
         double[][] temperaturas;
+        double valor;
+        String valores = "";
         
-        System.out.println("< DETERMINAR MATRIZ >");
+        System.out.print("\n\033[H\033[2J"); // limpiar terminal
+        System.out.println("         < < < DETERMINAR MATRIZ > > >");
         System.out.print("Ingrese la cantidad de filas: ");
         filas = input.nextInt();
 
-        System.out.print("Ingrese la cantida de columnas: ");
+        System.out.print("Ingrese la cantidad de columnas: ");
         columnas = input.nextInt();
+        temperaturas = new double[filas][columnas];
 
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-        temperaturas = llenarMatriz(filas, columnas);
-
+        for (int i = 0; i < temperaturas.length; i++) {
+            for (int j = 0; j < temperaturas[0].length; j++) {
+                System.out.print("\n\033[H\033[2J");
+                System.out.println("            < < < DETERMINAR VALORES > > >");
+                System.out.println("Ingrese la temperatura (" + (i + 1) + "," + (j + 1) + ")");
+                System.out.print(valores);
+                temperaturas[i][j] = input.nextDouble();
+                valores += temperaturas[i][j] + "     ";
+            }
+            valores += "\n";
+        }
+        
         do {
-            System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-            System.out.println("< MENÚ >");
+            input.nextLine();
+            System.out.print("\n\033[H\033[2J");
+            System.out.println("        < < < MENÚ > > >");
             System.out.println("1. Imprimir matriz");
             System.out.println("2. Mostrar temperatura máxima");
             System.out.println("3. Mostrar temperatura mínima");
             System.out.println("4. Mostrar promedio");
-            System.out.println("5. Mostrar puntos calientes");
-            System.out.println("6. Mostrar zonas mayores a una temperatura");
+            System.out.println("5. Contar temperaturas mayores que una temperatura específica");
+            System.out.println("6. Mostrar zonas calientes");
             System.out.println("\n");
-            System.out.print("Opción (0 para salir): ");
-            caso = input.nextInt();
+            System.out.println("(Ingrese una entrada inválida para salir)");
+            System.out.print("Opción: ");
+            opción = input.nextLine().charAt(0);
+            
+            System.out.print("\n\033[H\033[2J");
+            switch (opción) {
+                case '1':
+                    System.out.println("        < < < MATRIZ REGISTRADA > > >");
+                    escribirMatriz(temperaturas);
+                break;
+                case '2':
+                    int[] maxTempPos = maximaTemperatura(temperaturas);
 
-            switch (caso) {
-                case 1:
-                    mostrarMatriz(temperaturas);
-                    input.nextLine();
-                    break;
-                case 2:
-                    maximaTemperatura(temperaturas);
-                    input.nextLine();
-                    break;
-                case 3:
-                    minimaTemperatura(temperaturas);
-                    input.nextLine();
-                    break;
-                case 4:
-                    double promedio = promedio(temperaturas);
-                    System.out.println("El promedio de la matriz es de " + promedio);
-                    System.out.println();
-                    input.nextLine();
-                    break;
-                case 5:
-                    zonasCalientes(temperaturas);
-                    input.nextLine();
-                    break;
-                case 6:
-                    zonasX(temperaturas);
-                    input.nextLine();
-                    break;
-                default:
-                    if (caso != 0) {
-                        System.out.println("Número no valido. Intente nuevamente");
-                        input.nextLine();
+                    System.out.println("        < < < TEMPERATURA MÁXIMA > > >");
+                    if (maxTempPos[0] != -1) {
+                        System.out.println(temperaturas[maxTempPos[0]][maxTempPos[1]] + " (fila " + (maxTempPos[0] + 1) + ", columna " + (maxTempPos[1] + 1) + ")");
                     } else {
-                        System.out.println("Saliendo...");
+                        System.out.println("No existe una temperatura máxima");
                     }
-                    break;
+                break;
+                case '3':
+                    int[] minTempPos = minimaTemperatura(temperaturas);
+
+                    System.out.println("        < < < TEMPERATURA MÍNIMA > > >");
+                    if (minTempPos[0] != -1) {
+                        System.out.println("-> " + temperaturas[minTempPos[0]][minTempPos[1]] + " (fila " + (minTempPos[0] + 1) + ", columna " + (minTempPos[1] + 1) + ")");
+                    } else {
+                        System.out.println("-> No existe una temperatura mínima");
+                    }
+                break;
+                case '4':
+                    System.out.println("        < < < PROMEDIO > > >");
+                    System.out.println("->  " + calcularPromedio(temperaturas));
+                break;
+                case '5':                
+                    System.out.println("        < < < TEMPERATURAS MAYORES > > >");    
+                    System.out.print("\nIngrese el valor mínimo: ");
+                    valor = input.nextDouble();
+                    input.nextLine(); // limpiar buffer (bug)
+                    System.out.println("->  " + temperaturasMayores(temperaturas, valor));
+                break;
+                case '6':
+                    int[][] zonasCalientes = zonasCalientes(temperaturas);
+                    int longitud = 0;
+                    while (zonasCalientes[longitud] != null) {
+                        longitud++;
+                    }
+                    
+                    System.out.println("        < < < ZONAS CALIENTES > > >");
+                    for (int i = 0; i < longitud; i++) {
+                        System.out.println("-> " + temperaturas[zonasCalientes[i][0]][zonasCalientes[i][1]]);
+                    }
+                break;
+                default:
+                    opción = 0;
+                    System.out.println("Fue un placer! :)");
+                break;
             }
-        } while (caso != 0);
+        } while (opción != 0);
 
         input.close();
-    }
-
-    public static double[][] llenarMatriz(int filas, int columnas) {
-        Scanner input = new Scanner(System.in);
-        double[][] matriz = new double[filas][columnas];
-
-        System.out.println("< DETERMINAR VALORES >");
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[0].length; j++) {
-                System.out.print("Ingrese la temperatura (" + (i + 1) + "," + (j + 1) + "): ");
-                matriz[i][j] = input.nextDouble();
-            }
-        }
-
-        input.close();
-        return matriz;
     }
     
-    public static void mostrarMatriz(double[][] matriz) {
+    // devuelve matriz en formato String
+    public static void escribirMatriz(double[][] matriz) {
+        String salida = "";
+
         for (int i = 0; i < matriz.length; i++) {
+            salida += (i + 1) + ">   ";
             for (int j = 0; j < matriz[0].length; j++) {
-                System.out.print(matriz[i][j] + "   ");
+                salida += "[" + matriz[i][j] + "]   ";
             }
-            System.out.println();
+            salida = salida.trim() + "\n";
         }
+
+        System.out.println(salida);
     }
 
-    public static void maximaTemperatura(double[][] matriz) {
-        double tempMax = -1000;
+    // devuelve posición de la temperatura máxima o -1 en la posición 0 si no existe
+    public static int[] maximaTemperatura(double[][] matriz) {
+        int[] tempMaxPos = {0, 0};
         boolean seRepite = false;
-        int fila = 0, columna = 0;
 
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[0].length; j++) {
-                if (matriz[i][j] > tempMax) {
+        for (int i = 1; i < matriz.length; i++) {
+            for (int j = 1; j < matriz[0].length; j++) {
+                if (matriz[i][j] > matriz[tempMaxPos[0]][tempMaxPos[1]]) {
                     seRepite = false;
-                    tempMax = matriz[i][j];
-                    fila = i;
-                    columna = j;
-                } else if (matriz[i][j] == tempMax) {
+                    tempMaxPos[0] = i;
+                    tempMaxPos[1] = j;
+                } else if (matriz[i][j] == matriz[tempMaxPos[0]][tempMaxPos[1]]) {
                     seRepite = true;
                 }
             }
         }
-
         if (seRepite) {
-            System.out.println("No existe temperatura máxima");
-        } else {
-           System.out.println("Temperatura máxima: " + tempMax + "\nPosicion: (" + (fila + 1) + "," + (columna + 1) + ")");
+            tempMaxPos[0] = -1;
         }
+
+        return tempMaxPos;
     }
     
-    public static void minimaTemperatura(double[][] matriz) {
-        double tempMin = 1000;
+    // devuelve posición de la temperatura mínima o -1 en la posición 0 si no existe
+    public static int[] minimaTemperatura(double[][] matriz) {
+        int[] tempMinPos = {0, 0};
         boolean seRepite = false;
-        int fila = 0, columna = 0;
         
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[0].length; j++) {
-                if (matriz[i][j] < tempMin) {
+        for (int i = 1; i < matriz.length; i++) {
+            for (int j = 1; j < matriz[0].length; j++) {
+                if (matriz[i][j] < matriz[tempMinPos[0]][tempMinPos[1]]) {
                     seRepite = false;
-                    tempMin = matriz[i][j];
-                    fila = i;
-                    columna = j;
-                } else if (matriz[i][j] == tempMin) {
+                    tempMinPos[0] = i;
+                    tempMinPos[1] = j;
+                } else if (matriz[i][j] == matriz[tempMinPos[0]][tempMinPos[1]]) {
                     seRepite = true;
                 }
             }
         }
-
         if (seRepite) {
-            System.out.println("No existe temperatura mínima");
-        } else {
-           System.out.println("Temperatura mínima: " + tempMin + "\nPosicion: (" + (fila + 1) + "," + (columna + 1) + ")");
+            tempMinPos[0] = -1;
         }
+
+        return tempMinPos;
     }
     
-    public static double promedio(double[][] matriz) {
+    // suma todos los elementos y los divide por la cantidad
+    public static double calcularPromedio(double[][] matriz) {
         double total = 0;
         int cantidad = 0;
         double resultado = 0;
@@ -161,32 +182,26 @@ public class E01 {
         return resultado;
     }
     
-    public static void zonasX(double[][] matriz) {
-        Scanner input = new Scanner(System.in);
-        double tempX = 0;
-        boolean noMax = true;
-
-        System.out.print("Ingrese la temperatura que desea:");
-        tempX = input.nextDouble();
-        System.out.println("\nTemperaturas que superan el valor " + tempX + ":");
-
+    // devuelve matriz con la posición de los elementos mayores a un valor
+    public static int temperaturasMayores(double[][] matriz, double valor) {
+        int contador = 0;
+        
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
-                if (tempX < matriz[i][j]) {
-                    System.out.println((i + j + 1) + ". " + matriz[i][j] + " (" + i + "," + j + ")");
-                    noMax = false;
+                if (matriz[i][j] > valor) {
+                    contador++;
                 }
             }
         }
-        if (noMax) {
-            System.out.println("(Ninguno)");
-        }
 
-        input.close();
+        return contador;
     }
 
-    public static void zonasCalientes(double[][] matriz) {
-        int[][] direcciones = {
+    // devuelve matriz con la posición de los puntos más grandes que sus vecinos inmediatos
+    public static int[][] zonasCalientes(double[][] matriz) {
+        int[][] zonasCalientes = new int[matriz.length][2];
+        int contador = 0;
+        int[][] vecinos = {
             {0, 1},
             {0, -1},
             {1, 0},
@@ -195,27 +210,31 @@ public class E01 {
 
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
-                boolean puntCaliente = true;
+                boolean zonaCaliente = true;
                 int k = 0;
 
                 do {
-                    int ni = i + direcciones[k][0];
-                    int nj = j + direcciones[k][1];
+                    int ni = i + vecinos[k][0];
+                    int nj = j + vecinos[k][1];
 
                     if (ni >= 0 && ni < matriz.length && nj >= 0 && nj < matriz[0].length) {
                         if (matriz[ni][nj] >= matriz[i][j]) {
-                            puntCaliente = false;
+                            zonaCaliente = false;
                         }
                     }
 
                     k++;
-                } while (puntCaliente && k < direcciones.length);
+                } while (zonaCaliente && k < vecinos.length);
             
-                if (puntCaliente) {
-                    System.out.println("En la posicion (" + i + ", " + j + ") hay un punto caliente");
+                if (zonaCaliente) {
+                    zonasCalientes[contador][0] = i;
+                    zonasCalientes[contador][1] = j;
+                    contador++;
                 }
             }
         }
+
+        return zonasCalientes;
     }
 }
 
