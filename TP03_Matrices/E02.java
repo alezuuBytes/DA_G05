@@ -7,49 +7,57 @@ public class E02 {
         char[][] playa = new char[5][6];
         int[] posL;
         int[] lugares;
-        char caso;
+        char opción;
+
         llenarMatriz(playa);
 
         do {
-            System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-            System.out.println("< MENÚ >");
+            System.out.print("\n\033[H\033[2J");
+            System.out.println("        < < < MENÚ > > >");
             System.out.println("1. Mostrar estacionamientos totales");
             System.out.println("2. Contar lugares");
             System.out.println("3. Ocupar primer lugar libre");
             System.out.println("\n");
-            System.out.print("Opción (0 para salir): ");
-            caso = input.nextLine().charAt(0);
+            System.out.println("(Ingrese una entrada inválida para salir)");
+            System.out.print(">    Opción: ");
+            opción = input.nextLine().charAt(0);
 
-            switch (caso) {
+            System.out.print("\n\033[H\033[2J");
+            switch (opción) {
                 case '1':
-                    mostrarMatriz(playa);
-
-                    input.nextLine();
+                    System.out.println("        < < < PLAYA > > >");
+                    escribirMatriz(playa);
+                    System.out.println("");
+                    System.out.println("L = Libre");
+                    System.out.println("O = Ocupado");
+                    System.out.println("R = Reservado");
                 break;
                 case '2':
+                    System.out.println("        < < < CANTIDAD DE LUGARES > > >");
                     lugares = contarLugares(playa);
-                    System.out.println("Lugares libres: " + lugares[0]);
-                    System.out.println("Lugares ocupados: " + lugares[1]);
-                    System.out.println("Lugares reservados: " + lugares[2]);
-
-                    input.nextLine();
+                    System.out.println("->  Libres: " + lugares[0]);
+                    System.out.println("->  Ocupados: " + lugares[1]);
+                    System.out.println("->  Reservados: " + lugares[2]);
                 break;
                 case '3':
+                    System.out.println("        < < < OCUPAR ESTACIONAMIENTO > > >");
                     posL = buscarPrimerLibre(playa);
 
                     if (posL[0] != playa.length) {
                         playa[posL[0]][posL[1]] = 'O';
-                        System.out.println("Tu estacionamiento está en la fila " + (posL[0] + 1) + ", columna " + (posL[1] + 1));
+                        System.out.println("->  Tu estacionamiento está en la fila " + (posL[0] + 1) + ", columna " + (posL[1] + 1));
+                        escribirMatriz(playa);
                     } else {
-                        System.out.println("No se encuentra un lugar libre para ocupar");
+                        System.out.println("->  No se encuentra un lugar libre para ocupar");
                     }
-                    mostrarMatriz(playa);
-
-                    input.nextLine();
+                break;
+                default:
+                    opción = 0;
+                    System.out.println("Fue un placer! :)");
                 break;
             }
-        } while (caso != '0');
-        System.out.println("Saliendo...");
+            input.nextLine();
+        } while (opción != 0);
 
         input.close();
     }
@@ -65,14 +73,18 @@ public class E02 {
         }
     }
     
-    public static void mostrarMatriz(char[][] matriz) {        
+    public static void escribirMatriz(char[][] matriz) {
+        String salida = "";
+
         for (int i = 0; i < matriz.length; i++) {
+            salida += (i + 1) + ">   ";
             for (int j = 0; j < matriz[0].length; j++) {
-                System.out.print("[" + matriz[i][j] + "] ");
+                salida += "[" + matriz[i][j] + "]   ";
             }
-            System.out.println();
+            salida = salida.trim() + "\n";
         }
-    }   
+        System.out.println(salida);
+    }
 
     public static int[] contarLugares(char[][] matriz) {
         int[] lugares = {0, 0, 0};
@@ -94,15 +106,13 @@ public class E02 {
 
     public static int[] buscarPrimerLibre(char[][] matriz) {
         int[] pos = {0, 0};
-        int i = pos[0];
-        int j = pos[1];
 
-        while (i < matriz.length && matriz[i][j] != 'L') {
-            j++;
+        while (pos[0] < matriz.length && matriz[pos[0]][pos[1]] != 'L') {
+            pos[1]++;
 
-            if (j >= matriz[0].length) {
-                i++;
-                j = 0;
+            if (pos[1] >= matriz[0].length) {
+                pos[0]++;
+                pos[1] = 0;
             }
         }
 
