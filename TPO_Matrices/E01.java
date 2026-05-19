@@ -7,11 +7,11 @@ public class E01 {
         double[][] temperaturas;
         double valor;
         
-        System.out.print("\n\033[H\033[2J"); // limpiar terminal
+        System.out.print("\n\033[2J\033[0;15H"); // limpiar terminal: reinicia todos los caracteres de la "pantalla visible" (los lleva al historial) y mueve el cursor al elemento (0,15)
         temperaturas = llenarMatriz();
 
         do {
-            System.out.print("\n\033[H\033[2J");
+            System.out.print("\n\033[2J");
             System.out.println("        < < < MENÚ > > >");
             System.out.println("1. Imprimir matriz");
             System.out.println("2. Mostrar temperatura máxima");
@@ -94,7 +94,7 @@ public class E01 {
         int filas, columnas;
         String texto = "";
 
-        System.out.println("         < < < DETERMINAR MATRIZ > > >");
+        System.out.println("< < < DETERMINAR MATRIZ > > >");
         System.out.print("Ingrese la cantidad de filas: ");
         filas = input.nextInt();
 
@@ -102,14 +102,13 @@ public class E01 {
         columnas = input.nextInt();
         matriz = new double[filas][columnas];
 
+        System.out.print("\n\033[2J\033[0;50H");
+        System.out.println("< < < DETERMINAR VALORES > > >");
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
-                System.out.print("\n\033[H\033[2J");
-                System.out.println("            < < < DETERMINAR VALORES > > >");
-                System.out.println("Ingrese la temperatura (" + (i + 1) + "," + (j + 1) + ")");
-                System.out.print(texto);
+                System.out.println("\033[1;0H" + "Ingrese la temperatura (" + (i + 1) + "," + (j + 1) + ")");
+                // System.out.print("\033[" + ());
                 matriz[i][j] = input.nextDouble();
-                texto += matriz[i][j] + "     ";
             }
             texto += "\n";
         }
@@ -178,7 +177,11 @@ public class E01 {
 
         return resultado;
     }
+
     
+    //ale gay
+
+
     // devuelve matriz con la posición de los elementos mayores a un valor
     public static int temperaturasMayores(double[][] matriz, double valor) {
         int contador = 0;
