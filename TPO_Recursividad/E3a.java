@@ -1,8 +1,16 @@
+import java.util.Scanner;
+
 public class E3a {
     public static void main(String[] args) {
-        String texto = "locura";
-        int i = 0;
-        System.out.println(jeringoso(texto, i));
+        Scanner input = new Scanner(System.in);
+        String texto;
+        String textoJeringoso;
+
+        System.out.print("Ingrese el texto que desea convertir: ");
+        texto = input.nextLine().toLowerCase();
+        textoJeringoso = jeringoso(texto, 0);
+
+        System.out.println("Texto: " + texto + "\nJeringoso: " + textoJeringoso);
     }
     
     public static String jeringoso(String texto, int i){

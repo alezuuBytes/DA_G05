@@ -13,16 +13,16 @@ public class E5b {
         System.out.print("Ingrese la bomba: ");
         bomba = input.nextInt();
 
-        secuencia = Explotar(n, bomba).trim().replaceAll(" ", ", ");
-        System.out.println(secuencia);
+        secuencia = explotar(n, bomba).trim().replaceAll(" ", ", ");
+        System.out.println("Restos de la explosión: " + secuencia);
     }
 
-    public static String Explotar(int n, int b) {
+    public static String explotar(int n, int b) {
         String resultado = "";
 
         if (n > b) {
-            resultado += Explotar(n/b, b);
-            resultado += Explotar(n - n/b, b);
+            resultado += explotar(n/b, b);
+            resultado += explotar(n - n/b, b);
         } else {
             resultado += n + " ";
         }

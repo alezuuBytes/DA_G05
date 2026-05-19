@@ -1,15 +1,42 @@
+import java.util.Random;
+
 public class E2b {
     public static void main(String[] args) {
-        int[][] matriz = {
-            {1,2,3},
-            {4,5,6},
-            {7,8,9}
-        };
-        int i = 0;
+        Random random = new Random();
+        int numAleatorio = random.nextInt(1, 10);
+        int[][] matriz = new int[numAleatorio][numAleatorio];
+        int suma;
 
-        System.out.println(sumaDiagonal(matriz, i));
+        llenarMatriz(matriz);
+        suma = sumaDiagonal(matriz, 0);
+
+        mostrarMatriz(matriz);
+        System.out.println("Suma diagonal: " + suma);
     }
-    
+
+    public static void llenarMatriz(int[][] matriz) {
+        Random random = new Random();
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[0].length; j++) {
+                matriz[i][j] = random.nextInt(0, 10);
+            }
+        }
+    }
+
+    public static void mostrarMatriz(int[][] matriz) {
+        String texto = "";
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[0].length; j++) {
+                texto += matriz[i][j] + " ";
+            }
+            texto += "\n";
+        }
+
+        System.out.println(texto);
+    }
+
     public static int sumaDiagonal(int[][] m, int i){
         int resultado = 0;
 
